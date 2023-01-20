@@ -19,19 +19,19 @@ For plotting:
 
 Start a store with:
 ```bash
-DB_FILE=data.db ./mon.sh init
+./mon.sh data.db init
 ```
 
 And record data with:
 
 ```bash
-DB_FILE=data.db ./mon.sh record
+./mon.sh data.db record
 ```
 
 Preferably, you may setup a cron like:
 
 ```bnash
-*   *   *   *   *   cd <path-to-this-folder> && DB_FILE=data.db ./mon.sh record
+*   *   *   *   *   cd <path-to-this-folder> && ./mon.sh data.db record
 ```
 which fetches data every minute. 
 
@@ -39,9 +39,9 @@ which fetches data every minute.
 
 To plot, simply do:
 ```bash
-./plot.sh  # output to out.png 
+./plot.sh data.db  # output to out.png 
 # or
-/plot.sh top-usage.png
+/plot.sh data.db top-usage.png
 ```
 ## Notes
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DB_FILE="${DB_FILE:-tops.db}"
+DB_FILE="$1"
 TABLE="Data"
 IDX_TABLE="DataIdx"
 VIEW_NAME="DataBuffer"
@@ -18,7 +18,7 @@ fetch(){
     top -b -n 1 | sed 1,7d | head -n $SERIES_SIZE | awk "{ printf \"${awk_fmt}\", \$12,\$9,\$10; }" | sed 's/.$//g'
 }
 
-if [[ $1 == "init" ]] ; then
+if [[ $2 == "init" ]] ; then
     sqlite3 $DB_FILE "CREATE TABLE ${TABLE} (${SQL_CREATE_COLS})"
     sqlite3 $DB_FILE "CREATE TABLE ${IDX_TABLE} (I)"
     
@@ -42,15 +42,15 @@ if [[ $1 == "init" ]] ; then
     sqlite3 $DB_FILE "INSERT INTO ${IDX_TABLE} (I) VALUES (0)"
 fi
 
-if [[ $1 == "record" ]] ; then
+if [[ $2 == "record" ]] ; then
     sqlite3 $DB_FILE "INSERT OR REPLACE INTO ${VIEW_NAME} (time, name, cpu, mem) VALUES $(fetch);"
 fi
 
-if [[ $1 == "get" ]] ; then
+if [[ $2 == "get" ]] ; then
     sqlite3 $DB_FILE "SELECT * FROM ${VIEW_NAME};"
 fi
 
-if [[ $1 == "get-timestamps" ]] ; then
+if [[ $2 == "get-timestamps" ]] ; then
     sqlite3 $DB_FILE "SELECT DISTINCT time FROM ${VIEW_NAME};"
 fi
 
