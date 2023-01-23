@@ -1,37 +1,52 @@
 {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "data": {
-    "name": "mon-data",
-    "url": "mon-data.csv",
-    "format": {
-      "type": "csv"
-    }
-  },
-  "repeat": ["cpu", "mem"],
-  "columns": 1,
-  "spec": {
-    "width": 1200,
-    "height": 400,
-    "mark": "bar",
-    "encoding": {
-      "x": {
-        "field": "time",
-        "type": "temporal"
-      },
-      "y": {
-        "aggregate": "sum",
-        "field": {
-          "repeat": "repeat"
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+        "name": "mon-data",
+        "url": "mon-data.csv",
+        "format": {
+            "type": "csv"
         }
-      },
-      "color": {
-        "field": "name",
-        "sort": {
-          "op": "sum",
-          "field": "mem",
-          "order": "descending"
+    },
+    "transform": [
+        {
+            "calculate": "time(datum.time) - timeOffset('hours', now(), -2)",
+            "as": "relative-time"
+        },
+        {
+            "filter": {
+                "field": "relative-time",
+                "gte": "0"
+            }
         }
-      }
+    ],
+    "repeat": [
+        "cpu",
+        "mem"
+    ],
+    "columns": 1,
+    "spec": {
+        "width": 1200,
+        "height": 400,
+        "mark": "bar",
+        "encoding": {
+            "x": {
+                "field": "time",
+                "type": "temporal"
+            },
+            "y": {
+                "aggregate": "sum",
+                "field": {
+                    "repeat": "repeat"
+                }
+            },
+            "color": {
+                "field": "name",
+                "sort": {
+                    "op": "sum",
+                    "field": "mem",
+                    "order": "descending"
+                }
+            }
+        }
     }
-  }
 }
